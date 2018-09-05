@@ -34,7 +34,7 @@ class Rule {
 public:
     Rule(Piece i_typeArr[m_maxw][m_maxh], int i_playerArr[m_maxw][m_maxh]);
     std:: vector<IPoint> reachingPos(int x, int y);
-    bool checkIn(std:: vector<IPoint> &vec, IPoint point);
+    bool checkIn(const std:: vector<IPoint> &vec, IPoint point);
 };
 
 #endif // RULE_H

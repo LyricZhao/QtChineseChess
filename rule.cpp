@@ -11,6 +11,7 @@ Rule:: Rule(Piece i_typeArr[m_maxw][m_maxh], int i_playerArr[m_maxw][m_maxh]) {
 bool Rule:: inGrid(int x, int y, int player) {
     if(player == 0) return IR(3, x, 5) && IR(0, y, 2); // red
     if(player == 1) return IR(3, x, 5) && IR(7, y, 9); // black
+    assert(0); return false;
 }
 
 bool Rule:: exist(int x, int y) {
@@ -22,6 +23,7 @@ bool Rule:: inRange(int x, int y) {
 }
 
 bool Rule:: isSame(int x0, int y0, int x1, int y1) {
+    if(typeArr[x0][y0] == None || typeArr[x1][y1] == None) return false;
     return playerArr[x0][y0] == playerArr[x1][y1];
 }
 
@@ -100,9 +102,9 @@ std:: vector<IPoint> Rule:: reachingChariot(int x, int y, int p) {
 
 # define funcGun if(!inRange(rx, ry) || (mf && isSame(x, y, rx, ry))) break; \
     if(exist(rx, ry)) {\
-        if(mf) { ret.push_back(MP(rx, ry)); break; }
-        else mf = true;
-    } else if(!mf) { ret.push_back(MP(rx, ry)); } \
+        if(mf) { ret.push_back(MP(rx, ry)); break; }\
+        else mf = true;\
+    } else if(!mf) { ret.push_back(MP(rx, ry)); }
 
 std:: vector<IPoint> Rule:: reachingGun(int x, int y, int p) {
     (void)(p);
@@ -117,6 +119,24 @@ std:: vector<IPoint> Rule:: reachingGun(int x, int y, int p) {
 
 std:: vector<IPoint> Rule:: reachingSoldier(int x, int y, int p) {
     (void)(p);
+    const int yL[2] = {0, 5};
+    const int yR[2] = {4, 9};
+    const int fS[2] = {1, -1};
+
+    // forward
+    int dx = x, dy = y + fS[p];
+    std:: vector<IPoint> ret; ret.clear();
+    if(inRange(dx, dy) && !isSame(x, y, dx, dy)) ret.push_back(MP(dx, dy));
+
+    if(!IR(yL[p], y, yR[p])) {
+        const int mx[2] = {-1, 1};
+        for(int i = 0; i < 2; ++ i) {
+            dx = x + mx[i], dy = y;
+            if(inRange(dx, dy) && !isSame(x, y, dx, dy))
+                ret.push_back(MP(dx, dy));
+        }
+    }
+    return ret;
 }
 
 std:: vector<IPoint> Rule:: reachingPos(int x, int y) {

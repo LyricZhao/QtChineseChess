@@ -46,9 +46,8 @@ void MainWindow:: mouseReleaseEvent(QMouseEvent *ev) {
     mouseIsPressed = false;
     QPoint qpos = ev -> pos();
     qpos -= QPoint(boardX, boardY);
-    if(se -> mouseRelease(qpos)) {
-        update();
-    }
+    bool ret = se -> mouseRelease(qpos);
+    update();
 }
 
 void MainWindow:: paintEvent(QPaintEvent *ev) {

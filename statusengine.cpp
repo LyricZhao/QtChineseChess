@@ -21,8 +21,17 @@ StatusEngine:: StatusEngine() {
     dataClear();
 }
 
-void StatusEngine:: select(int x, int y) {
-    opX = x, opY = y;
+void StatusEngine:: refreshChecked() {
+    if(!mouseIsMoving) {
+        memset(checkedArr, 0, sizeof(checkedArr));
+        return;
+    }
+    Rule ruler(typeArr, playerArr);
+    std:: vector<IPoint> ret = ruler.reachingPos(opX, opY);
+    memset(checkedArr, 0, sizeof(checkedArr));
+    for(auto it: ret) {
+        checkedArr[it.first][it.second] = true;
+    }
 }
 
 void StatusEngine:: dataClear() {
@@ -53,6 +62,7 @@ bool StatusEngine:: mouseClick(QPoint qpos) {
                 opX = i, opY = j;
                 mouseIsMoving = true;
                 mouseTrackPos = qpos - rectArr[i][j].topLeft();
+                refreshChecked();
                 return true;
             }
         }
@@ -72,19 +82,24 @@ bool StatusEngine:: mouseRelease(QPoint qpos) {
         for(int i = 0; i < m_maxw; ++ i) {
             for(int j = 0; j < m_maxh; ++ j) {
                 if(rectArr[i][j].contains(qpos)) {
-                    attemptMove(i, j);
+                    bool ret = attemptMove(i, j);
+                    refreshChecked();
+                    return ret;
                 }
             }
         }
         return true;
     }
+    refreshChecked();
     return false;
 }
 
-void StatusEngine:: attemptMove(int targetX, int targetY) {
-    if(opX == targetX && opY == targetY) return;
+bool StatusEngine:: attemptMove(int targetX, int targetY) {
+    // if(opX == targetX && opY == targetY) return false;
+    if(!checkedArr[targetX][targetY]) return false;
     setPosition(targetX, targetY, playerArr[opX][opY], typeArr[opX][opY]);
     setPosition(opX, opY, 0, None);
+    return true;
 }
 
 void StatusEngine:: setPosition(int x, int y, int player, Piece chess) {
@@ -109,17 +124,21 @@ QPoint StatusEngine:: getPosition(int x, int y) {
 }
 
 QString StatusEngine:: getIconName(Piece chess, int player, bool attack) {
+    if(chess == None) {
+        assert(attack == true);
+        return QObject:: tr("non.gif");
+    }
     QString iconName = "";
     iconName += (player == 0) ? 'r' : 'b';
     iconName += pieceMap[(int)(chess)];
-    // if(opX == x && opY == y) iconName += 's';
+    if(attack == true) iconName += 's';
     iconName += ".gif";
 
     return iconName;
 }
 
 void StatusEngine:: drawPosition(int x, int y, int player, Piece chess, QPainter *painter) {
-    if(chess == None) return;
+    if(chess == None && !checkedArr[x][y]) return;
     if(mouseIsMoving && x == opX && y == opY) return;
 
     /*
@@ -132,7 +151,7 @@ void StatusEngine:: drawPosition(int x, int y, int player, Piece chess, QPainter
     */
 
     QPixmap image;
-    image.load(QObject:: tr(":/Pics/piece/") + getIconName(chess, player));
+    image.load(QObject:: tr(":/Pics/piece/") + getIconName(chess, player, checkedArr[x][y]));
     // qDebug() << QObject:: tr(":/Pics/piece/") + iconName;
     // cX -= image.width() / 2, cY -= image.height() / 2;
     painter -> drawPixmap(getPosition(x, y), image);
