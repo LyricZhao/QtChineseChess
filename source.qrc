@@ -1,0 +1,34 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Pics/piece/bc.gif</file>
+        <file>Pics/piece/bcs.gif</file>
+        <file>Pics/piece/bj.gif</file>
+        <file>Pics/piece/bjs.gif</file>
+        <file>Pics/piece/bm.gif</file>
+        <file>Pics/piece/bms.gif</file>
+        <file>Pics/piece/bp.gif</file>
+        <file>Pics/piece/bps.gif</file>
+        <file>Pics/piece/bs.gif</file>
+        <file>Pics/piece/bss.gif</file>
+        <file>Pics/piece/bx.gif</file>
+        <file>Pics/piece/bxs.gif</file>
+        <file>Pics/piece/bz.gif</file>
+        <file>Pics/piece/bzs.gif</file>
+        <file>Pics/piece/non.gif</file>
+        <file>Pics/piece/rc.gif</file>
+        <file>Pics/piece/rcs.gif</file>
+        <file>Pics/piece/rj.gif</file>
+        <file>Pics/piece/rjs.gif</file>
+        <file>Pics/piece/rm.gif</file>
+        <file>Pics/piece/rms.gif</file>
+        <file>Pics/piece/rp.gif</file>
+        <file>Pics/piece/rps.gif</file>
+        <file>Pics/piece/rs.gif</file>
+        <file>Pics/piece/rss.gif</file>
+        <file>Pics/piece/rx.gif</file>
+        <file>Pics/piece/rxs.gif</file>
+        <file>Pics/piece/rz.gif</file>
+        <file>Pics/board.gif</file>
+        <file>defaultChess.txt</file>
+    </qresource>
+</RCC>
