@@ -3,6 +3,8 @@
 # include <QPainter>
 # include <QPaintEvent>
 # include <QMouseEvent>
+# include <QFileDialog>
+# include <QMessageBox>
 
 # include "helpme.h"
 # include "mainwindow.h"
@@ -16,6 +18,7 @@ MainWindow:: MainWindow(QWidget *parent) :
     ui -> ChessBoard -> hide();
     se = new StatusEngine();
     se -> reset();
+    globalSetting = new Settings();
 
     // this -> setMouseTracking(true);
 }
@@ -66,4 +69,23 @@ void MainWindow::on_action_Quit_triggered() {
 void MainWindow::on_action_Help_Me_triggered() {
     HelpMe *hm = new HelpMe(this);
     hm -> show();
+}
+
+void MainWindow::on_actionSettings_triggered() {
+    SettingDialog *sd = new SettingDialog(this, globalSetting);
+    sd -> show();
+}
+
+void MainWindow::on_action_Load_File_triggered() {
+    QString openFile = QFileDialog:: getOpenFileName(this, "Open File");
+    if(openFile.size() == 0) return;
+    if(se -> readFile(openFile)) {
+        update();
+    } else {
+        QMessageBox:: information(this, "ERROR", "Can't Open this file!");
+    }
+}
+
+void MainWindow::on_action_Save_File_triggered() {
+    se -> saveIntoFile();
 }

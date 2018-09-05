@@ -4,6 +4,7 @@
 # include <QLabel>
 # include <QPoint>
 # include <QPainter>
+# include <QTextStream>
 
 # include "rule.h"
 
@@ -41,6 +42,8 @@ public:
     void draw(QPainter *painter, QPoint oP);
     bool attemptMove(int targetX, int targetY);
     bool readFile(QString filePath);
+    bool saveIntoFile();
+    void singleOutput(QTextStream &outPut, Piece chess, int p);
 };
 
 #endif // STATUSENGINE_H

@@ -54,9 +54,11 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionConnect"/>
    <addaction name="actionNew_Game"/>
    <addaction name="actionSettings"/>
    <addaction name="action_Load_File"/>
+   <addaction name="action_Save_File"/>
    <addaction name="action_Help_Me"/>
    <addaction name="action_Quit"/>
   </widget>
@@ -113,6 +115,28 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+E</string>
+   </property>
+  </action>
+  <action name="action_Save_File">
+   <property name="text">
+    <string>😬  Save File</string>
+   </property>
+   <property name="toolTip">
+    <string>Save current state into file!</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionConnect">
+   <property name="text">
+    <string>👫  Connect</string>
+   </property>
+   <property name="toolTip">
+    <string>Connect to another player!</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
    </property>
   </action>
  </widget>

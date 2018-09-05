@@ -4,6 +4,7 @@
 # include <QPoint>
 # include <QMainWindow>
 
+# include "settings.h"
 # include "statusengine.h"
 
 # define boardX 250
@@ -23,10 +24,14 @@ public:
 private slots:
     void on_action_Quit_triggered();
     void on_action_Help_Me_triggered();
+    void on_actionSettings_triggered();
+    void on_action_Load_File_triggered();
+    void on_action_Save_File_triggered();
 
 private:
     Ui::MainWindow *ui;
     StatusEngine *se;
+    Settings *globalSetting;
 
     bool mouseIsPressed;
     void paintEvent(QPaintEvent *ev);

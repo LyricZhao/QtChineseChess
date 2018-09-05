@@ -11,6 +11,7 @@
 # include <QObject>
 # include <QPixmap>
 # include <QTextStream>
+# include <QFileDialog>
 # include <QPaintEvent>
 
 # include "statusengine.h"
@@ -206,6 +207,8 @@ void StatusEngine:: draw(QPainter *painter, QPoint oP) {
 }
 
 bool StatusEngine:: readFile(QString filePath) {
+    dataClear();
+    emptyState = false;
     QFile *file = new QFile(filePath);
     if(file -> open(QFile:: ReadOnly)) {
         QTextStream text(file);
@@ -240,5 +243,44 @@ bool StatusEngine:: readFile(QString filePath) {
     }
 
     delete file;
+    return false;
+}
+
+void StatusEngine:: singleOutput(QTextStream &outPut, Piece chess, int p) {
+    int count = 0 ;
+    for(int i = 0; i < m_maxw; ++ i) {
+        for(int j = 0; j < m_maxh; ++ j) {
+            count += (typeArr[i][j] == chess && playerArr[i][j] == p);
+        }
+    }
+    outPut << count << " ";
+    for(int i = 0; i < m_maxw; ++ i) {
+        for(int j = 0; j < m_maxh; ++ j) {
+            if(typeArr[i][j] == chess && playerArr[i][j] == p) {
+                outPut << "<" << i << "," << j << "> ";
+            }
+        }
+    }
+    outPut << endl;
+}
+
+bool StatusEngine:: saveIntoFile() {
+    QString filePath = QFileDialog:: getSaveFileName(nullptr, QObject:: tr("Save"));
+    if(filePath.size() == 0) return false;
+
+    QFile saveFile(filePath);
+    if(saveFile.open(QFile:: WriteOnly)) {
+        QTextStream outPut(&saveFile);
+
+        outPut << "red" << endl;
+        for(int i = 1; i < 8; ++ i)
+            singleOutput(outPut, (Piece)(i), 0);
+        outPut << "black" << endl;
+        for(int i = 1; i < 8; ++ i)
+            singleOutput(outPut, (Piece)(i), 1);
+
+        saveFile.close();
+        return true;
+    }
     return false;
 }

@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -29,17 +29,23 @@ SOURCES += \
         mainwindow.cpp \
     statusengine.cpp \
     rule.cpp \
-    helpme.cpp
+    helpme.cpp \
+    settings.cpp \
+    communicator.cpp
 
 HEADERS += \
         mainwindow.h \
     statusengine.h \
     rule.h \
-    helpme.h
+    helpme.h \
+    settings.h \
+    communicator.h
 
 FORMS += \
         mainwindow.ui \
-    helpme.ui
+    helpme.ui \
+    settingdialog.ui \
+    communicatordialog.ui
 
 RESOURCES += \
     source.qrc
