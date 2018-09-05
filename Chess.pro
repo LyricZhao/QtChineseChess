@@ -28,15 +28,18 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     statusengine.cpp \
-    rule.cpp
+    rule.cpp \
+    helpme.cpp
 
 HEADERS += \
         mainwindow.h \
     statusengine.h \
-    rule.h
+    rule.h \
+    helpme.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+    helpme.ui
 
 RESOURCES += \
     source.qrc

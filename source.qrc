@@ -30,5 +30,8 @@
         <file>Pics/piece/rz.gif</file>
         <file>Pics/board.gif</file>
         <file>defaultChess.txt</file>
+        <file>Pics/piece/rzs.gif</file>
+        <file>Pics/background.jpg</file>
+        <file>Pics/helpme/payme.jpg</file>
     </qresource>
 </RCC>

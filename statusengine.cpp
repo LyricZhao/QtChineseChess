@@ -41,6 +41,7 @@ void StatusEngine:: dataClear() {
     memset(typeArr, 0, sizeof(typeArr));
     memset(playerArr, 0, sizeof(playerArr));
 
+    refreshChecked();
     for(int i = 0; i < m_maxw; ++ i) {
         for(int j = 0; j < m_maxh; ++ j) {
             rectArr[i][j] = QRect(getPosition(i, j), QSize(57, 57));
@@ -58,7 +59,7 @@ bool StatusEngine:: mouseClick(QPoint qpos) {
     mouseRealPos = qpos;
     for(int i = 0; i < m_maxw; ++ i) {
         for(int j = 0; j < m_maxh; ++ j) {
-            if(rectArr[i][j].contains(qpos)) {
+            if(rectArr[i][j].contains(qpos) && typeArr[i][j] != None) {
                 opX = i, opY = j;
                 mouseIsMoving = true;
                 mouseTrackPos = qpos - rectArr[i][j].topLeft();

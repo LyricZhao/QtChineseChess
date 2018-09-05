@@ -7,7 +7,7 @@
 # include "statusengine.h"
 
 # define boardX 250
-# define boardY 30
+# define boardY 88
 
 namespace Ui {
 class MainWindow;
@@ -19,6 +19,10 @@ class MainWindow : public QMainWindow {
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+private slots:
+    void on_action_Quit_triggered();
+    void on_action_Help_Me_triggered();
 
 private:
     Ui::MainWindow *ui;

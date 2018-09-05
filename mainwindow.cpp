@@ -4,6 +4,7 @@
 # include <QPaintEvent>
 # include <QMouseEvent>
 
+# include "helpme.h"
 # include "mainwindow.h"
 # include "ui_mainwindow.h"
 
@@ -53,5 +54,16 @@ void MainWindow:: mouseReleaseEvent(QMouseEvent *ev) {
 void MainWindow:: paintEvent(QPaintEvent *ev) {
     (void)(ev); // unused warning
     QPainter painter(this);
+    QPixmap image(tr(":/Pics/background.jpg"));
+    painter.drawPixmap(0, 0, this -> width(), this -> height(), image);
     if(se != nullptr) se -> draw(&painter, QPoint(boardX, boardY));
+}
+
+void MainWindow::on_action_Quit_triggered() {
+    this -> close();
+}
+
+void MainWindow::on_action_Help_Me_triggered() {
+    HelpMe *hm = new HelpMe(this);
+    hm -> show();
 }
