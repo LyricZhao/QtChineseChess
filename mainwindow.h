@@ -29,18 +29,33 @@ private slots:
     void on_action_Load_File_triggered();
     void on_action_Save_File_triggered();
     void on_actionConnect_triggered();
+    void on_actionNew_Game_triggered();
+    void on_action_Disconnect_triggered();
+    void on_action_Reset_triggered();
+
+    void readyPending();
+    void handleMsg();
+    void delConnect();
 
 private:
+    enum Status{Unconnected, Pending, Gaming};
+
     Ui::MainWindow *ui;
     StatusEngine *se;
     Settings *globalSetting;
     CommunicatorDialog *network;
-
+    Status globalStatus;
+    bool enReady, amReady;
     bool mouseIsPressed;
+    int amPlayer, curPos;
+
     void paintEvent(QPaintEvent *ev);
     void mousePressEvent(QMouseEvent *ev);
     void mouseMoveEvent(QMouseEvent *ev);
     void mouseReleaseEvent(QMouseEvent *ev);
+
+    void toolBarSet(Status gS);
+    void realNewGame();
 };
 
 #endif // MAINWINDOW_H

@@ -55,10 +55,12 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionConnect"/>
+   <addaction name="action_Disconnect"/>
    <addaction name="actionNew_Game"/>
-   <addaction name="actionSettings"/>
    <addaction name="action_Load_File"/>
    <addaction name="action_Save_File"/>
+   <addaction name="action_Reset"/>
+   <addaction name="actionSettings"/>
    <addaction name="action_Help_Me"/>
    <addaction name="action_Quit"/>
   </widget>
@@ -137,6 +139,25 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+C</string>
+   </property>
+  </action>
+  <action name="action_Disconnect">
+   <property name="text">
+    <string>🙄  Disconnect</string>
+   </property>
+   <property name="toolTip">
+    <string>Disconnect the game!</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+D</string>
+   </property>
+  </action>
+  <action name="action_Reset">
+   <property name="text">
+    <string>🦆  Reset</string>
+   </property>
+   <property name="toolTip">
+    <string>Reset to the original board!</string>
    </property>
   </action>
  </widget>

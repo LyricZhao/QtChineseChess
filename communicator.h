@@ -30,6 +30,8 @@ public:
     QByteArray getData();
 
 signals:
+    void connectOK();
+    void connectLost();
     void gettingData();
 
 private slots:

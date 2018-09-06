@@ -4,6 +4,7 @@
 # include <QLabel>
 # include <QPoint>
 # include <QPainter>
+# include <QByteArray>
 # include <QTextStream>
 
 # include "rule.h"
@@ -36,14 +37,17 @@ public:
     bool isEnd(int *winner = nullptr);
 
     void reset();
+    void trans(const QByteArray &arr);
     bool mouseMove(QPoint qpos);
-    bool mouseClick(QPoint qpos);
+    bool mouseClick(QPoint qpos, int amPlayer);
     bool mouseRelease(QPoint qpos);
     void draw(QPainter *painter, QPoint oP);
     bool attemptMove(int targetX, int targetY);
     bool readFile(QString filePath);
     bool saveIntoFile();
     void singleOutput(QTextStream &outPut, Piece chess, int p);
+    QByteArray toRawData();
+    int getGeneralPlayer();
 };
 
 #endif // STATUSENGINE_H

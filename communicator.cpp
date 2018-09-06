@@ -1,6 +1,7 @@
 # include "communicator.h"
 # include "ui_communicatordialog.h"
 
+# include <QDebug>
 # include <QMessageBox>
 # include <QHostAddress>
 
@@ -12,8 +13,7 @@ CommunicatorDialog:: CommunicatorDialog(QWidget *parent) :
 }
 
 CommunicatorDialog:: ~CommunicatorDialog() {
-    if(server != nullptr) delete server;
-    if(client != nullptr) delete client;
+    disConnect();
     delete ui;
 }
 
@@ -21,9 +21,13 @@ void CommunicatorDialog:: resetToDefault() {
     connected = connecting = false;
     server = nullptr;
     client = nullptr;
+    ui -> ipLine -> setEnabled(true);
     ui -> ipLine -> setText(tr(DEFAULT_IP));
+    ui -> portSpin -> setEnabled(true);
     ui -> portSpin -> setValue(DEFAULT_PORT);
+    ui -> clientRB -> setEnabled(true);
     ui -> clientRB -> setChecked(true);
+    ui -> serverRB -> setEnabled(true);
     ui -> serverRB -> setChecked(false);
     ui -> label -> hide();
     ui -> OKButton -> setEnabled(true);
@@ -61,14 +65,14 @@ void CommunicatorDialog:: on_OKButton_clicked() {
     ui -> label -> show();
     if(isClient) {
         ui -> label -> setText(tr("Connecting ..."));
-        client = new QTcpSocket(this);
+        client = new QTcpSocket();
         client -> connectToHost(QHostAddress(IP_Addr), port);
         connect(client, SIGNAL(connected()), this, SLOT(connectedActions()));
         connecting = true;
         ui -> OKButton -> setEnabled(false);
     } else {
         ui -> label -> setText(tr("Waiting for connection ..."));
-        server = new QTcpServer(this);
+        server = new QTcpServer();
         server -> listen(QHostAddress:: Any, port);
         connect(server, SIGNAL(newConnection()), this, SLOT(connectedActions()));
         connecting = true;
@@ -83,20 +87,25 @@ void CommunicatorDialog:: connectedActions() {
         client = server -> nextPendingConnection();
     }
     connect(client, SIGNAL(readyRead()), this, SLOT(dataPending()));
+    connect(client, &QTcpSocket:: disconnected, this, [this](){ emit connectLost(); });
     this -> close();
     pendingDataLen = 0;
     dataBuffer.clear();
+    emit connectOK();
 }
 
 void CommunicatorDialog:: disConnect() {
     if(connected) {
-        client -> close();
-        delete client;
+        // client -> close();
         if(!isClient) {
             server -> close();
-            delete server;
+            client -> disconnectFromHost();
+        } else {
+            client -> disconnectFromHost();
         }
         connected = false;
+        client = nullptr;
+        server = nullptr;
     }
 }
 
@@ -104,11 +113,8 @@ void CommunicatorDialog:: on_cancelButton_clicked() {
     if(connecting) {
         connecting = false;
         client -> close();
-        delete client;
-        if(!isClient) {
+        if(!isClient)
             server -> close();
-            delete server;
-        }
         resetToDefault();
     } else {
         this -> close();
@@ -121,13 +127,15 @@ void CommunicatorDialog:: dataPending() {
         if(client -> bytesAvailable() >= (long long)sizeof(int)) {
             client -> read((char *)&pendingDataLen, sizeof(int));
         }
-    } else {
-        if(client -> bytesAvailable() >= pendingDataLen) {
-            dataBuffer.resize(pendingDataLen);
-            client -> read(dataBuffer.data(), pendingDataLen);
-            pendingDataLen = 0;
-            emit gettingData();
-        }
+    }
+
+    if(pendingDataLen == 0) return;
+
+    if(client -> bytesAvailable() >= pendingDataLen) {
+        dataBuffer.resize(pendingDataLen);
+        client -> read(dataBuffer.data(), pendingDataLen);
+        pendingDataLen = 0;
+        emit gettingData();
     }
 }
 

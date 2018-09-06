@@ -55,12 +55,12 @@ void StatusEngine:: reset() {
     assert(readFile(QObject:: tr(":/defaultChess.txt")) == true);
 }
 
-bool StatusEngine:: mouseClick(QPoint qpos) {
+bool StatusEngine:: mouseClick(QPoint qpos, int amPlayer) {
     assert(mouseIsMoving == false);
     mouseRealPos = qpos;
     for(int i = 0; i < m_maxw; ++ i) {
         for(int j = 0; j < m_maxh; ++ j) {
-            if(rectArr[i][j].contains(qpos) && typeArr[i][j] != None) {
+            if(rectArr[i][j].contains(qpos) && typeArr[i][j] != None && (amPlayer == -1 || playerArr[i][j] == amPlayer)) {
                 opX = i, opY = j;
                 mouseIsMoving = true;
                 mouseTrackPos = qpos - rectArr[i][j].topLeft();
@@ -159,6 +159,19 @@ void StatusEngine:: drawPosition(int x, int y, int player, Piece chess, QPainter
     painter -> drawPixmap(getPosition(x, y), image);
 
     // painter -> restore();
+}
+
+int StatusEngine:: getGeneralPlayer() {
+    int pG = 0;
+    for(int i = 3; i < 6; ++ i) {
+        for(int j = 0; j < 3; ++ j) {
+            if(typeArr[i][j] == General) {
+                pG = playerArr[i][j];
+                break;
+            }
+        }
+    }
+    return pG;
 }
 
 int StatusEngine:: read(const QString &line, int &pos, bool &ok) {
@@ -262,6 +275,30 @@ void StatusEngine:: singleOutput(QTextStream &outPut, Piece chess, int p) {
         }
     }
     outPut << endl;
+}
+
+void StatusEngine:: trans(const QByteArray &arr) {
+    emptyState = false;
+    const char *bg = arr.data();
+    Piece tArr[m_maxw][m_maxh];
+    int pArr[m_maxw][m_maxh];
+    memcpy(&tArr[0][0], bg + sizeof(int), sizeof(Piece) * m_maxw * m_maxh);
+    memcpy(&pArr[0][0], bg + sizeof(int) + sizeof(Piece) * m_maxw * m_maxh, sizeof(int) * m_maxw * m_maxh);
+    for(int i = 0; i < m_maxw; ++ i) {
+        for(int j = 0; j < m_maxh; ++ j) {
+            typeArr[i][j] = tArr[m_maxw - i - 1][m_maxh - j - 1];
+            playerArr[i][j] = pArr[m_maxw - i - 1][m_maxh - j - 1];
+        }
+    }
+
+}
+
+QByteArray StatusEngine:: toRawData() {
+    QByteArray ret; ret.clear();
+    int type = 0; ret.append((const char *)&type, sizeof(int));
+    ret.append((const char *)&typeArr[0][0], sizeof(Piece) * m_maxw * m_maxh);
+    ret.append((const char *)&playerArr[0][0], sizeof(int) * m_maxw * m_maxh);
+    return ret;
 }
 
 bool StatusEngine:: saveIntoFile() {
