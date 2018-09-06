@@ -1,6 +1,7 @@
 # ifndef MAINWINDOW_H
 # define MAINWINDOW_H
 
+# include <QTimer>
 # include <QPoint>
 # include <QMainWindow>
 
@@ -10,6 +11,9 @@
 
 # define boardX 250
 # define boardY 88
+
+# define GAME_WAIT_SEC 30
+# define REFRESH_INTERVAL 1000
 
 namespace Ui {
 class MainWindow;
@@ -36,6 +40,7 @@ private slots:
     void readyPending();
     void handleMsg();
     void delConnect();
+    void countDown();
 
 private:
     enum Status{Unconnected, Pending, Gaming};
@@ -47,7 +52,8 @@ private:
     Status globalStatus;
     bool enReady, amReady;
     bool mouseIsPressed;
-    int amPlayer, curPos;
+    int amPlayer, curPos, timeRemaining;
+    QTimer *gameTimer;
 
     void paintEvent(QPaintEvent *ev);
     void mousePressEvent(QMouseEvent *ev);
@@ -56,6 +62,7 @@ private:
 
     void toolBarSet(Status gS);
     void realNewGame();
+    void timerReset();
 };
 
 #endif // MAINWINDOW_H

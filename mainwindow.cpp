@@ -27,13 +27,27 @@ MainWindow:: MainWindow(QWidget *parent) :
     connect(network, SIGNAL(connectOK()), this, SLOT(readyPending()));
     connect(network, SIGNAL(gettingData()), this, SLOT(handleMsg()));
     connect(network, SIGNAL(connectLost()), this, SLOT(delConnect()));
+
+    /* Timer */
+    gameTimer = new QTimer(this);
+    connect(gameTimer, SIGNAL(timeout()), this, SLOT(countDown()));
 }
 
 MainWindow:: ~MainWindow() {
     delete ui;
 }
 
+void MainWindow:: countDown() {
+    -- timeRemaining;
+    if(timeRemaining < 0) timeRemaining = 0;
+    ui -> lcdNumber -> display(timeRemaining);
+}
+
 void MainWindow:: toolBarSet(Status gS) {
+    if(globalStatus == Gaming && gS != Gaming) {
+        gameTimer -> stop();
+    }
+
     globalStatus = gS;
     ui -> actionConnect -> setEnabled(gS == Unconnected);
     ui -> action_Disconnect -> setEnabled(gS != Unconnected);
@@ -46,6 +60,10 @@ void MainWindow:: toolBarSet(Status gS) {
     // ui -> action_Quit -> setEnabled(true);
     if(gS == Pending) enReady = false, amReady = false;
     amPlayer = -1;
+
+    if(gS != Gaming) ui -> lcdNumber -> hide();
+    else ui -> lcdNumber -> show();
+
 }
 
 void MainWindow:: mousePressEvent(QMouseEvent *ev) {
@@ -76,8 +94,11 @@ void MainWindow:: mouseReleaseEvent(QMouseEvent *ev) {
     qpos -= QPoint(boardX, boardY);
     if(se -> mouseRelease(qpos)){
         if(globalStatus != Unconnected) {
-            curPos ^= 1;
             network -> sendData(se -> toRawData());
+            if(globalStatus == Gaming) {
+                curPos ^= 1;
+                timerReset();
+            }
         }
     }
     update();
@@ -97,6 +118,7 @@ void MainWindow:: handleMsg() {
     if(tp == 0) {
         curPos ^= 1;
         se -> trans(msg);
+        if(globalStatus == Gaming) timerReset();
         update();
     } else if(tp == 1) {
         enReady ^= 1;
@@ -176,4 +198,13 @@ void MainWindow:: realNewGame() {
     curPos = 0;
     toolBarSet(Gaming);
     amPlayer = se -> getGeneralPlayer();
+    timerReset();
+}
+
+void MainWindow:: timerReset() {
+    if(gameTimer -> isActive())
+        gameTimer -> stop();
+    timeRemaining = GAME_WAIT_SEC;
+    ui -> lcdNumber -> display(GAME_WAIT_SEC);
+    gameTimer -> start(REFRESH_INTERVAL);
 }
