@@ -19,6 +19,7 @@ MainWindow:: MainWindow(QWidget *parent) :
     se = new StatusEngine();
     se -> reset();
     globalSetting = new Settings();
+    network = new CommunicatorDialog(this);
 
     // this -> setMouseTracking(true);
 }
@@ -88,4 +89,8 @@ void MainWindow::on_action_Load_File_triggered() {
 
 void MainWindow::on_action_Save_File_triggered() {
     se -> saveIntoFile();
+}
+
+void MainWindow::on_actionConnect_triggered() {
+    network -> newShow();
 }

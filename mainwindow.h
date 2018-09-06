@@ -6,6 +6,7 @@
 
 # include "settings.h"
 # include "statusengine.h"
+# include "communicator.h"
 
 # define boardX 250
 # define boardY 88
@@ -27,11 +28,13 @@ private slots:
     void on_actionSettings_triggered();
     void on_action_Load_File_triggered();
     void on_action_Save_File_triggered();
+    void on_actionConnect_triggered();
 
 private:
     Ui::MainWindow *ui;
     StatusEngine *se;
     Settings *globalSetting;
+    CommunicatorDialog *network;
 
     bool mouseIsPressed;
     void paintEvent(QPaintEvent *ev);
