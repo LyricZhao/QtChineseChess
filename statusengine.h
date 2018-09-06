@@ -17,7 +17,7 @@ private:
     int playerArr[m_maxw][m_maxh]; // 0 for red (self), 1 for black (enemy)
     bool checkedArr[m_maxw][m_maxh];
     bool emptyState, mouseIsMoving;
-    int opX, opY;
+    int opX, opY, opPlayer;
     QPoint mouseTrackPos, mouseRealPos;
 
     int read(const QString &line, int &pos, bool &ok);
@@ -45,6 +45,7 @@ public:
     bool attemptMove(int targetX, int targetY);
     bool readFile(QString filePath);
     bool saveIntoFile();
+    void setPlayer(int p);
     void singleOutput(QTextStream &outPut, Piece chess, int p);
     QByteArray toRawData();
     int getGeneralPlayer();

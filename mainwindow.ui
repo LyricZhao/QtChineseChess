@@ -66,10 +66,10 @@
   </widget>
   <action name="actionNew_Game">
    <property name="text">
-    <string>🤔  New Game</string>
+    <string>🤔  Ready</string>
    </property>
    <property name="toolTip">
-    <string>Connect to a new game!</string>
+    <string>Ready for a new game!</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>

@@ -3,15 +3,20 @@
 
 # include "rule.h"
 
-Rule:: Rule(Piece i_typeArr[m_maxw][m_maxh], int i_playerArr[m_maxw][m_maxh]) {
+Rule:: Rule(Piece i_typeArr[m_maxw][m_maxh], int i_playerArr[m_maxw][m_maxh], int player) {
     memcpy(&typeArr[0][0], &i_typeArr[0][0], sizeof(Piece) * m_maxw * m_maxh);
     memcpy(&playerArr[0][0], &i_playerArr[0][0], sizeof(int) * m_maxw * m_maxh);
+    for(int i = 0; i < m_maxw; ++ i) {
+        for(int j = 0; j < m_maxh; ++ j) {
+            playerArr[i][j] ^= player;
+        }
+    }
 }
 
 bool Rule:: inGrid(int x, int y, int player) {
     if(player == 0) return IR(3, x, 5) && IR(0, y, 2); // red
     if(player == 1) return IR(3, x, 5) && IR(7, y, 9); // black
-    assert(0); return false;
+    return false;
 }
 
 bool Rule:: exist(int x, int y) {

@@ -33,5 +33,7 @@
         <file>Pics/piece/rzs.gif</file>
         <file>Pics/background.jpg</file>
         <file>Pics/helpme/payme.jpg</file>
+        <file>BGM/bgm.mp3</file>
+        <file>Pics/ready.png</file>
     </qresource>
 </RCC>

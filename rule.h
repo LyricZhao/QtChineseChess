@@ -15,6 +15,7 @@ typedef std:: pair<int, int> IPoint;
 enum Piece {None, General, Knight, Elephant, Horse, Chariot, Gun, Soldier};
 
 class Rule {
+private:
     Piece typeArr[m_maxw][m_maxh];
     int playerArr[m_maxw][m_maxh];
 
@@ -32,7 +33,7 @@ class Rule {
     std:: vector<IPoint> reachingSoldier(int x, int y, int p);
 
 public:
-    Rule(Piece i_typeArr[m_maxw][m_maxh], int i_playerArr[m_maxw][m_maxh]);
+    Rule(Piece i_typeArr[m_maxw][m_maxh], int i_playerArr[m_maxw][m_maxh], int player);
     std:: vector<IPoint> reachingPos(int x, int y);
     bool checkIn(const std:: vector<IPoint> &vec, IPoint point);
 };

@@ -112,9 +112,11 @@ void CommunicatorDialog:: disConnect() {
 void CommunicatorDialog:: on_cancelButton_clicked() {
     if(connecting) {
         connecting = false;
-        client -> close();
-        if(!isClient)
+        if(!isClient) {
             server -> close();
+        } else {
+            client -> disconnectFromHost();
+        }
         resetToDefault();
     } else {
         this -> close();

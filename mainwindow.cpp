@@ -1,3 +1,4 @@
+# include <QUrl>
 # include <QPoint>
 # include <QDebug>
 # include <QPainter>
@@ -5,6 +6,7 @@
 # include <QMouseEvent>
 # include <QFileDialog>
 # include <QMessageBox>
+# include <QMediaPlaylist>
 
 # include "helpme.h"
 # include "mainwindow.h"
@@ -31,6 +33,16 @@ MainWindow:: MainWindow(QWidget *parent) :
     /* Timer */
     gameTimer = new QTimer(this);
     connect(gameTimer, SIGNAL(timeout()), this, SLOT(countDown()));
+
+    /* Player */
+    bgm = new QMediaPlayer(this);
+    QMediaPlaylist *qpl = new QMediaPlaylist;
+    qpl -> addMedia(QUrl(tr("qrc:/BGM/bgm.mp3")));
+    qpl -> setCurrentIndex(1);
+    qpl -> setPlaybackMode(QMediaPlaylist:: CurrentItemInLoop);
+    bgm -> setPlaylist(qpl);
+    bgm -> setVolume(0);
+    bgm -> play();
 }
 
 MainWindow:: ~MainWindow() {
@@ -64,6 +76,7 @@ void MainWindow:: toolBarSet(Status gS) {
     if(gS != Gaming) ui -> lcdNumber -> hide();
     else ui -> lcdNumber -> show();
 
+    if(gS != Gaming) se -> setPlayer(0);
 }
 
 void MainWindow:: mousePressEvent(QMouseEvent *ev) {
@@ -107,9 +120,21 @@ void MainWindow:: mouseReleaseEvent(QMouseEvent *ev) {
 void MainWindow:: paintEvent(QPaintEvent *ev) {
     (void)(ev); // unused warning
     QPainter painter(this);
+    painter.save();
     QPixmap image(tr(":/Pics/background.jpg"));
     painter.drawPixmap(0, 0, this -> width(), this -> height(), image);
     if(se != nullptr) se -> draw(&painter, QPoint(boardX, boardY));
+    painter.restore();
+
+    if(globalStatus == Pending) {
+        QPixmap readyImg(tr(":/Pics/ready.png"));
+        if(enReady) {
+            painter.drawPixmap(25, 80, readyImg.width(), readyImg.height(), readyImg);
+        }
+        if(amReady) {
+            painter.drawPixmap(810, 580, readyImg.width(), readyImg.height(), readyImg);
+        }
+    }
 }
 
 void MainWindow:: handleMsg() {
@@ -119,13 +144,13 @@ void MainWindow:: handleMsg() {
         curPos ^= 1;
         se -> trans(msg);
         if(globalStatus == Gaming) timerReset();
-        update();
     } else if(tp == 1) {
         enReady ^= 1;
         if(enReady && amReady) realNewGame();
     } else if(tp == 2) {
 
     }
+    update();
 }
 
 void MainWindow:: delConnect() {
@@ -150,7 +175,8 @@ void MainWindow:: on_action_Help_Me_triggered() {
 
 void MainWindow:: on_actionSettings_triggered() {
     SettingDialog *sd = new SettingDialog(this, globalSetting);
-    sd -> show();
+    sd -> exec();
+    bgm -> setVolume(globalSetting -> soundEffect ? 100 : 0);
 }
 
 void MainWindow:: on_action_Load_File_triggered() {
@@ -180,6 +206,7 @@ void MainWindow:: on_actionNew_Game_triggered() {
     QByteArray command; command.clear();
     command.append((const char *)&iamReady, sizeof(int));
     network -> sendData(command);
+    update();
 }
 
 void MainWindow:: on_action_Disconnect_triggered() {
@@ -198,6 +225,7 @@ void MainWindow:: realNewGame() {
     curPos = 0;
     toolBarSet(Gaming);
     amPlayer = se -> getGeneralPlayer();
+    se -> setPlayer(amPlayer);
     timerReset();
 }
 

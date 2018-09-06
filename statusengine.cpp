@@ -27,7 +27,7 @@ void StatusEngine:: refreshChecked() {
         memset(checkedArr, 0, sizeof(checkedArr));
         return;
     }
-    Rule ruler(typeArr, playerArr);
+    Rule ruler(typeArr, playerArr, opPlayer);
     std:: vector<IPoint> ret = ruler.reachingPos(opX, opY);
     memset(checkedArr, 0, sizeof(checkedArr));
     for(auto it: ret) {
@@ -48,6 +48,10 @@ void StatusEngine:: dataClear() {
             rectArr[i][j] = QRect(getPosition(i, j), QSize(57, 57));
         }
     }
+}
+
+void StatusEngine:: setPlayer(int p) {
+    opPlayer = p;
 }
 
 void StatusEngine:: reset() {

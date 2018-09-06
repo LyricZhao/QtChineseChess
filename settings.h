@@ -13,7 +13,7 @@ struct Settings {
     bool soundEffect;
     QString userName;
 
-    Settings() { soundEffect = true; userName = "LyricZ"; }
+    Settings() { soundEffect = false; userName = "LyricZ"; }
 };
 
 class SettingDialog : public QDialog {

@@ -4,6 +4,7 @@
 # include <QTimer>
 # include <QPoint>
 # include <QMainWindow>
+# include <QMediaPlayer>
 
 # include "settings.h"
 # include "statusengine.h"
@@ -54,6 +55,7 @@ private:
     bool mouseIsPressed;
     int amPlayer, curPos, timeRemaining;
     QTimer *gameTimer;
+    QMediaPlayer *bgm;
 
     void paintEvent(QPaintEvent *ev);
     void mousePressEvent(QMouseEvent *ev);
