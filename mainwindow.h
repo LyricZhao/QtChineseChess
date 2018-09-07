@@ -37,6 +37,7 @@ private slots:
     void on_actionNew_Game_triggered();
     void on_action_Disconnect_triggered();
     void on_action_Reset_triggered();
+    void on_action_Give_Up_triggered();
 
     void readyPending();
     void handleMsg();
@@ -55,7 +56,8 @@ private:
     bool mouseIsPressed;
     int amPlayer, curPos, timeRemaining;
     QTimer *gameTimer;
-    QMediaPlayer *bgm;
+    QMediaPlayer *bgm, *soundE;
+    bool displayResult, gameResult;
 
     void paintEvent(QPaintEvent *ev);
     void mousePressEvent(QMouseEvent *ev);
@@ -65,6 +67,8 @@ private:
     void toolBarSet(Status gS);
     void realNewGame();
     void timerReset();
+    void setResult(bool result);
+    void checkState(int lastPlayer);
 };
 
 #endif // MAINWINDOW_H

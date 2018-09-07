@@ -35,5 +35,8 @@
         <file>Pics/helpme/payme.jpg</file>
         <file>BGM/bgm.mp3</file>
         <file>Pics/ready.png</file>
+        <file>Pics/result/lose.png</file>
+        <file>Pics/result/win.png</file>
+        <file>BGM/jj.mp3</file>
     </qresource>
 </RCC>

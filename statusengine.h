@@ -32,7 +32,6 @@ private:
 public:
     StatusEngine();
 
-    bool existPiece(int x, int y);
     bool isLegal(int x0, int y0, int x1, int y1);
     bool isEnd(int *winner = nullptr);
 
@@ -49,6 +48,10 @@ public:
     void singleOutput(QTextStream &outPut, Piece chess, int p);
     QByteArray toRawData();
     int getGeneralPlayer();
+
+    int checkGeneral();
+    int checkFace2Face();
+    int checkDanger();
 };
 
 #endif // STATUSENGINE_H

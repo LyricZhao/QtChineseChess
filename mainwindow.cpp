@@ -18,6 +18,7 @@ MainWindow:: MainWindow(QWidget *parent) :
 
     ui -> setupUi(this);
     ui -> ChessBoard -> hide();
+    displayResult = false;
 
     se = new StatusEngine(); se -> reset();
     globalSetting = new Settings();
@@ -36,6 +37,7 @@ MainWindow:: MainWindow(QWidget *parent) :
 
     /* Player */
     bgm = new QMediaPlayer(this);
+    soundE = new QMediaPlayer(this);
     QMediaPlaylist *qpl = new QMediaPlaylist;
     qpl -> addMedia(QUrl(tr("qrc:/BGM/bgm.mp3")));
     qpl -> setCurrentIndex(1);
@@ -51,6 +53,10 @@ MainWindow:: ~MainWindow() {
 
 void MainWindow:: countDown() {
     -- timeRemaining;
+    if(timeRemaining == 0) {
+        if(curPos == amPlayer)
+            on_action_Give_Up_triggered();
+    }
     if(timeRemaining < 0) timeRemaining = 0;
     ui -> lcdNumber -> display(timeRemaining);
 }
@@ -70,6 +76,7 @@ void MainWindow:: toolBarSet(Status gS) {
     // ui -> action_Save_File -> setEnabled(true);
     // ui -> action_Help_Me -> setEnabled(true);
     // ui -> action_Quit -> setEnabled(true);
+    ui -> action_Give_Up -> setEnabled(gS == Gaming);
     if(gS == Pending) enReady = false, amReady = false;
     amPlayer = -1;
 
@@ -111,6 +118,7 @@ void MainWindow:: mouseReleaseEvent(QMouseEvent *ev) {
             if(globalStatus == Gaming) {
                 curPos ^= 1;
                 timerReset();
+                checkState(amPlayer);
             }
         }
     }
@@ -135,6 +143,12 @@ void MainWindow:: paintEvent(QPaintEvent *ev) {
             painter.drawPixmap(810, 580, readyImg.width(), readyImg.height(), readyImg);
         }
     }
+
+    if(displayResult) {
+        QPixmap resultImg(gameResult ? tr(":/Pics/result/win.png") : tr(":/Pics/result/lose.png"));
+        displayResult = false;
+        painter.drawPixmap((this -> width() - resultImg.width()) / 2.0, (this -> height() - resultImg.height()) / 2.0, resultImg.width(), resultImg.height(), resultImg);
+    }
 }
 
 void MainWindow:: handleMsg() {
@@ -143,12 +157,15 @@ void MainWindow:: handleMsg() {
     if(tp == 0) {
         curPos ^= 1;
         se -> trans(msg);
-        if(globalStatus == Gaming) timerReset();
+        if(globalStatus == Gaming) {
+            timerReset();
+            checkState(amPlayer ^ 1);
+        }
     } else if(tp == 1) {
         enReady ^= 1;
         if(enReady && amReady) realNewGame();
     } else if(tp == 2) {
-
+        setResult(true);
     }
     update();
 }
@@ -235,4 +252,41 @@ void MainWindow:: timerReset() {
     timeRemaining = GAME_WAIT_SEC;
     ui -> lcdNumber -> display(GAME_WAIT_SEC);
     gameTimer -> start(REFRESH_INTERVAL);
+}
+
+void MainWindow::on_action_Give_Up_triggered() {
+    int giveup = 2;
+    QByteArray command; command.clear();
+    command.append((const char *)&giveup, sizeof(int));
+    network -> sendData(command);
+    setResult(false);
+    update();
+}
+
+void MainWindow:: setResult(bool result) {
+    displayResult = true;
+    gameResult = result;
+    toolBarSet(Pending);
+}
+
+void MainWindow:: checkState(int lastPlayer) {
+    // case 0: general gone, case 1: face to face, case 2: to be
+    int ret = se -> checkGeneral();
+    if(ret != 0) {
+        setResult(ret == 1);
+        return;
+    }
+
+    ret = se -> checkFace2Face();
+    if(ret) {
+        setResult(lastPlayer != amPlayer);
+        return;
+    }
+
+    ret = se -> checkDanger();
+    if(ret) {
+        soundE -> setMedia(QUrl("qrc:/BGM/jj.mp3"));
+        soundE -> setVolume(globalSetting -> soundEffect ? 100 : 0);
+        soundE -> play();
+    }
 }

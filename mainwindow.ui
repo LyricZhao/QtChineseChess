@@ -57,6 +57,7 @@
    <addaction name="actionConnect"/>
    <addaction name="action_Disconnect"/>
    <addaction name="actionNew_Game"/>
+   <addaction name="action_Give_Up"/>
    <addaction name="action_Load_File"/>
    <addaction name="action_Save_File"/>
    <addaction name="action_Reset"/>
@@ -158,6 +159,17 @@
    </property>
    <property name="toolTip">
     <string>Reset to the original board!</string>
+   </property>
+  </action>
+  <action name="action_Give_Up">
+   <property name="text">
+    <string>😾  Give Up</string>
+   </property>
+   <property name="toolTip">
+    <string>Give up the game!</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+G</string>
    </property>
   </action>
  </widget>

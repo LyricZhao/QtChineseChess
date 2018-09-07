@@ -325,3 +325,42 @@ bool StatusEngine:: saveIntoFile() {
     }
     return false;
 }
+
+int StatusEngine:: checkGeneral() {
+    bool has = false;
+    for(int i = 3; i < 6; ++ i) for(int j = 0; j < 3; ++ j)
+        has |= (typeArr[i][j] == General);
+    if(!has) return -1;
+    has = false;
+    for(int i = 3; i < 6; ++ i) for(int j = 7; j < 10; ++ j)
+        has |= (typeArr[i][j] == General);
+    if(!has) return 1;
+    return 0;
+}
+
+int StatusEngine:: checkFace2Face() {
+    int x0 = -1, y0 = -1, x1 = -1, y1 = -1;
+    for(int i = 3; i < 6; ++ i) for(int j = 0; j < 3; ++ j) if(typeArr[i][j] == General)
+        x0 = i, y0 = j;
+    for(int i = 3; i < 6; ++ i) for(int j = 7; j < 10; ++ j) if(typeArr[i][j] == General)
+        x1 = i, y1 = j;
+    assert(x0 != -1 && x1 != -1);
+    if(x0 != x1) return 0;
+    for(int i = y0 + 1; i < y1; ++ i) if(typeArr[x1][i] != None) return 0;
+    return 1;
+}
+
+int StatusEngine:: checkDanger() {
+    Rule ruler(typeArr, playerArr, opPlayer);
+    for(int i = 0; i < m_maxw; ++ i) {
+        for(int j = 0; j < m_maxh; ++ j) {
+            if(typeArr[i][j] == None) continue;
+            std:: vector<IPoint> ret = ruler.reachingPos(i, j);
+            for(auto it: ret) {
+                if(typeArr[it.first][it.second] == General && playerArr[it.first][it.second] != playerArr[i][j])
+                    return 1;
+            }
+        }
+    }
+    return 0;
+}
