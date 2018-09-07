@@ -87,6 +87,7 @@ void MainWindow:: toolBarSet(Status gS) {
 }
 
 void MainWindow:: mousePressEvent(QMouseEvent *ev) {
+    if(globalStatus != Gaming) return;
     if(globalStatus == Gaming && curPos != amPlayer) return;
     mouseIsPressed = true;
     QPoint qpos = ev -> pos();
@@ -97,6 +98,7 @@ void MainWindow:: mousePressEvent(QMouseEvent *ev) {
 }
 
 void MainWindow:: mouseMoveEvent(QMouseEvent *ev) {
+    if(globalStatus != Gaming) return;
     if(globalStatus == Gaming && curPos != amPlayer) return;
     if(!mouseIsPressed) return;
     QPoint qpos = ev -> pos();
@@ -108,6 +110,7 @@ void MainWindow:: mouseMoveEvent(QMouseEvent *ev) {
 }
 
 void MainWindow:: mouseReleaseEvent(QMouseEvent *ev) {
+    if(globalStatus != Gaming) return;
     if(globalStatus == Gaming && curPos != amPlayer) return;
     mouseIsPressed = false;
     QPoint qpos = ev -> pos();

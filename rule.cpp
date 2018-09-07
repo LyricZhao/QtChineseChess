@@ -68,7 +68,7 @@ std:: vector<IPoint> Rule:: reachingElephant(int x, int y, int p) {
 
     std:: vector<IPoint> ret; ret.clear();
     for(int i = 0; i < 4; ++ i) {
-        if(inRange(x + dx[i], y + dy[i]) && !isSame(x, y, x + dx[i], y + dy[i]) && !exist(x + cx[i], y + cy[i])) {
+        if(inRange(x + dx[i], y + dy[i]) && !isSame(x, y, x + dx[i], y + dy[i]) && !exist(x + cx[i], y + cy[i]) && !((y < 5) ^ (y + dy[i] < 5))) {
             ret.push_back(MP(x + dx[i], y + dy[i]));
         }
     }
