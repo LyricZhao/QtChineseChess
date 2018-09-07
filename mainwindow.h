@@ -13,7 +13,7 @@
 # define boardX 250
 # define boardY 88
 
-# define GAME_WAIT_SEC 30
+# define GAME_WAIT_SEC 20
 # define REFRESH_INTERVAL 1000
 
 namespace Ui {
