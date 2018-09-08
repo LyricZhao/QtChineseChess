@@ -83,7 +83,7 @@ std:: vector<IPoint> Rule:: reachingHorse(int x, int y, int p) {
     const int cy[8] = {-1, +1, -1, +1,  0,  0,  0,  0};
 
     std:: vector<IPoint> ret; ret.clear();
-    for(int i = 0; i < 4; ++ i) {
+    for(int i = 0; i < 8; ++ i) {
         if(inRange(x + dx[i], y + dy[i]) && !isSame(x, y, x + dx[i], y + dy[i]) && !exist(x + cx[i], y + cy[i])) {
             ret.push_back(MP(x + dx[i], y + dy[i]));
         }
