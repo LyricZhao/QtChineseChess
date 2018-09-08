@@ -49,6 +49,8 @@
 
 - ToolBar
 
+  ![](http://otxp6khet.bkt.clouddn.com/qcc/updc6.png)
+
   - Connect
 
     - You can choose to be the client or the server.
