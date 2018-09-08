@@ -13,16 +13,16 @@
 
 #### Features
 
-- [ ] OOP Design Style, Only 1.2k LoC.
-- [ ] High Scalability
-- [ ] High-Efficient Implement
-- [ ] Cross-Platform
-- [ ] Colorful Display
-- [ ] Sound Effect
-- [ ] Smooth User Experience
-- [ ] File Save/Load
-- [ ] Comfortable Coding Style
-- [ ] Tcp High Stability
+- [x] OOP Design Style, Only 1.2k LoC.
+- [x] High Scalability
+- [x] High-Efficient Implement
+- [x] Cross-Platform
+- [x] Colorful Display
+- [x] Sound Effect
+- [x] Smooth User Experience
+- [x] File Save/Load
+- [x] Comfortable Coding Style
+- [x] Tcp High Stability
 
 
 
