@@ -212,6 +212,22 @@
 
 
 
+#### How does it work?
+
+- When the game starts, only StatusEngine will be initiated, this part is responsible for drawing the chessboard and save the status of the board, and MainWindow is always running to call these functions and do some scheduling works.
+- About the network communicator:
+  - The network communicator is package in a new class, handling sending and receiving data.
+  - When it starts, it will start a TcpServer or TcpSocket, then the two players will establish the connection.
+  - For transfering data, the communicator will send a header of the message size first, and the other client will wait all the data to reach, and then a signal is emitted.
+  - The message is designed in a format of [size:type:context], the [size] is 4 bytes, the same with [type], the [size] means the size of the entire message, and for different types:
+    - type = 0: all the data of the chessboard, the context includes the player and the type of each position.
+    - type = 1: it means I(the sender) am ready for the game.
+    - type = 2: it means I(the sender) am lost.
+  - The next state of the global game is judged locally for programming-friendly, and also for the equality of the two players.
+- The transfer of data of Communicator and the MainWindow is by signals and slots, for MainWindow and the StatusEngine is just by calling functions.
+
+
+
 #### About the Interface and Sound Effect
 
 - The icons of the pieces and chessboard are downloaded from the Internet.
